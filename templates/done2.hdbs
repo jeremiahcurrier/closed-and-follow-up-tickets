@@ -1,0 +1,27 @@
+<h3 style="margin-bottom: 10px;">Again, there are {{filteredTickets}} Closed tickets</h3>
+<button class="btn go_back" type="button">Go Back</button>
+<button class="btn export" type="button">Export list to CSV</button>
+
+<div>
+  <table class="table">
+    <thead style="border-style: solid;">
+      <tr>
+        <th style="width: 0.25%;"></th>
+        <th class="srt_header"><span>Closed Ticket ID</span></th>
+        <th class="srt_header"><span>Follow Up ID(s)</span></th>
+        <th style="width: 0.25%;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#tickets}}
+          <tr id="{{id}}">
+            <td style="width: 0.25%;"></td>
+            <td class="size"><a href="#/tickets/{{id}}">Closed Ticket ID Here</a></td>
+            <td class="size"><a href="#/tickets/{{id}}">Follow up example 1, Follow up example 2</a></td>
+            <td style="width: 0.25%;"></td>
+            <input type="hidden" value="{{name}},{{email}}" class="filter_field" >
+          </tr>
+      {{/tickets}}
+    </tbody>
+  </table>
+</div>
