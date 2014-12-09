@@ -1,8 +1,10 @@
 (function () {
 
-  var closedTicketWithFollowup = [],
-      completedAuditRequests = 0; // increment the value by 1 for every time an AJAX request is sent to closed ticket ID URL
-    // There will only be an AJAX request for a closed ticket - once all AJAX requests are complete = the counter will be the same as total closed tickets value
+  var closedTicketWithFollowup = {},
+      completedAuditRequests = 0; 
+      // increment the value by 1 for every time an AJAX request is sent to closed ticket ID URL
+    // There will only be an AJAX request for a closed ticket...
+    // ...once all AJAX requests are complete = the counter will be the same as total closed tickets value.
 
   return {
 
@@ -155,22 +157,10 @@
       console.log('getAuditWithSideLoadTicketDone');
       console.log('data');
       console.log(data);
-      // console.log('data.count');
-      // console.log(data.count);
-      // console.log('data.tickets[0]');
-      // console.log(data.tickets[0]);
-      // console.log('data.audits');
-      // console.log(data.audits);
-      // console.log('data.audits[0].ticket_id');
-      // console.log(data.audits[0].ticket_id);
-      // console.log('data.tickets[0].followup_ids.length');
-      // console.log(data.tickets[0].followup_ids.length);
-
-      // {closed: [fu1, fu2, fu3]}
-      // each set of results is like this
 
       completedAuditRequests++;
-      console.log(completedAuditRequests);
+      console.log(completedAuditRequests); 
+      // this is the counter - when this value reaches the total queued then switch to done2.hdbs
 
       if (!next_page) {
 
@@ -185,55 +175,53 @@
               for (var i = 0; data.tickets[0].followup_ids.length > i; i++) {
                 followUpIds.push(data.tickets[0].followup_ids[i]);
               }
+
               // There are follow ups!
-              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
-              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
+              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
               console.log('followUpIds for ticket ' + data.audits[0].ticket_id + ':');
               console.log(followUpIds);
-              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
-              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
+              console.log('^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*');
 
               // You can create an object where the key is the closed ticket id & the value is an array of all the follow ups.
 
               console.log('closed ticket ID: ' + data.audits[0].ticket_id + ' with follow up ID(s): ' + followUpIds);
 
-              var closed = data.audits[0].ticket_id,
-                  followUps = followUpIds;
+              var closed = data.audits[0].ticket_id;
+              // this.closedTicketWithFollowup[closed] = [followUpIds]; // this is failing without a discernible pattern
 
-              this.closedTicketWithFollowups[closed] = followUpIds;
+
+              // START BACK HERE
+              // var testObject[closed] = { closed.val() ,[followUpIds] };
+              // console.log('testObject:******************************');
+              // console.log(testObject);
 
             } else {
               console.log(data.tickets[0].followup_ids.length);
             }
           }
         } else {
-          console.log('No follow up tickets');
-          console.log('data.tickets.length:');
-          console.log(data.tickets.length);
+          console.log(data.audits[0].ticket_id + ' has no follow up tickets');
         }
 
       } else {
         console.log('there is a next_page: ');
         console.log(next_page);
       }
-
-      console.log('#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       
       console.log(completedAuditRequests);
       console.log(this.totalRequests);
 
       console.log('^^^^^^^   closedTicketWithFollowup   ^^^^^^^^ ');
       console.log(closedTicketWithFollowup);
-      console.log('^^^^^^^   closedTicketWithFollowup   ^^^^^^^^ ');
 
       this.switchTo('loading2');
 
         if (completedAuditRequests === this.totalRequests) {
           this.switchTo('done2');
-          console.log('switched!!!!!!!!!!!!!!!!!!!!!!!!');
+          console.log('All AJAX requests to the ~/audits/{id}.json COMPLETE');
         }
 
-      console.log('#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      console.log('@@@@@@@@@@@@@@@@@@@@@ single ajax request to audits done @@@@@@@@@@@@@@@@@@@@@');
 
     },
 
@@ -249,9 +237,7 @@
 
       var filteredTickets = this.filteredTickets;
       console.log('start \'getFollowUps\'');
-
-      console.log('####################################################################################################################################');
-      console.log('########### |start| for loop to ticket audits for each closed ticket id ###########');
+      console.log('## |start| for loop to ticket audits for each closed ticket id ##');
 
       var totalRequests = filteredTickets.length;
       this.totalRequests = totalRequests; // the number of closed tickets you will send AJAX requests for
@@ -263,8 +249,7 @@
         console.log('Sending ID: ' + filteredTickets[i]);
       }
 
-      console.log('########### |end| for loop to ticket audits for each closed ticket id ###########');
-      console.log('####################################################################################################################################');
+      console.log('## |end| for loop to ticket audits for each closed ticket id ##');
 
     }
 
