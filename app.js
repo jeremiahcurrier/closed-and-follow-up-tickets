@@ -1,5 +1,9 @@
 (function () {
 
+  var closedTicketWithFollowup = [],
+      completedAuditRequests = 0; // increment the value by 1 for every time an AJAX request is sent to closed ticket ID URL
+    // There will only be an AJAX request for a closed ticket - once all AJAX requests are complete = the counter will be the same as total closed tickets value
+
   return {
 
     requests: {
@@ -45,10 +49,12 @@
 
     init: function () {
       this.switchTo('main');
+      console.log(closedTicketWithFollowup);
+      console.log(completedAuditRequests);
+      console.log('picture me gone');
     },
 
     fetch: function() {
-      // ********************************************************************************COME BACK 
       this.filteredTickets = []; // results of search
       this.ajax('getClosedTickets');
       this.switchTo('loading');
@@ -84,12 +90,13 @@
         this.results = data.results;
         console.log('results:');
         console.log(this.results);
-        console.log('filtered results: ');
+        console.log('filtered results / closed ticket ids: ');
 
         for (var i = 0; this.results.length > i; i++) {
           filteredTickets.push(this.results[i].id);
         }
-        console.log('closed ticket ids:');
+
+        console.log('There are ' + filteredTickets.length + ' closed tickets');
         console.log(filteredTickets);
         
         // No closed tickets
@@ -116,12 +123,13 @@
         var results = this.results;
         console.log('results:');
         console.log(results);
-        console.log('filtered results: ');
+        console.log('filtered results / closed ticket ids: ');
 
         for (var j = 0; this.results.length > j; j++) {
           filteredTickets.push(this.results[j].id);
         }
-        console.log('closed ticket ids:');
+
+        console.log('There are ' + filteredTickets.length + ' closed tickets');
         console.log(filteredTickets);
 
         this.switchTo('done', {
@@ -138,6 +146,8 @@
 
 
     getAuditWithSideLoadTicketDone: function(data) {
+
+      this.switchTo('loading2');
 
       var next_page         = data.next_page,
           previous_page     = data.previous_page;
@@ -158,6 +168,9 @@
 
       // {closed: [fu1, fu2, fu3]}
       // each set of results is like this
+
+      completedAuditRequests++;
+      console.log(completedAuditRequests);
 
       if (!next_page) {
 
@@ -187,16 +200,14 @@
               var closed = data.audits[0].ticket_id,
                   followUps = followUpIds;
 
-              console.log('closed');
-              console.log(closed);
-              console.log('followUps');
-              console.log(followUps);
+              this.closedTicketWithFollowups[closed] = followUpIds;
 
             } else {
               console.log(data.tickets[0].followup_ids.length);
             }
           }
         } else {
+          console.log('No follow up tickets');
           console.log('data.tickets.length:');
           console.log(data.tickets.length);
         }
@@ -205,6 +216,22 @@
         console.log('there is a next_page: ');
         console.log(next_page);
       }
+
+      console.log('#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      
+      console.log(completedAuditRequests);
+      console.log(this.totalRequests);
+
+      console.log('^^^^^^^   closedTicketWithFollowup   ^^^^^^^^ ');
+      console.log(closedTicketWithFollowup);
+      console.log('^^^^^^^   closedTicketWithFollowup   ^^^^^^^^ ');
+
+      this.switchTo('loading2');
+
+        if (completedAuditRequests === this.totalRequests) {
+          this.switchTo('done2');
+          console.log('switched!!!!!!!!!!!!!!!!!!!!!!!!');
+        }
 
       console.log('#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
@@ -226,6 +253,9 @@
       console.log('####################################################################################################################################');
       console.log('########### |start| for loop to ticket audits for each closed ticket id ###########');
 
+      var totalRequests = filteredTickets.length;
+      this.totalRequests = totalRequests; // the number of closed tickets you will send AJAX requests for
+
       for (var i = 0; filteredTickets.length > i; i++) {
         var id = filteredTickets[i];
         console.log(id);
@@ -235,39 +265,6 @@
 
       console.log('########### |end| for loop to ticket audits for each closed ticket id ###########');
       console.log('####################################################################################################################################');
-
-      this.switchTo('done2', {
-        filteredTickets: filteredTickets.length
-      });
-
-
-      // while (filteredTickets.length > 100) { // There are more than n tickets in filteredTickets - sending it in pieces to 'deleteItBatch'
-        
-      //   var batch = filteredTickets.splice(0, 100);
-        
-      //   this.ajax('deleteItBatch', batch) // Send this batch to 'deleteItBatch'
-      //     .done(
-      //       console.log('Batch of suspended tickets deleted successfully - while loop continues..')
-      //     )
-      //     .fail(
-      //       console.log('Failed to delete suspended tickets ' + batch)
-      //     );
-      // }
-
-      // if (filteredTickets.length <= 100) { // There are 2 or fewer IDs to delete so send filteredTickets to 'deleteIt'
-
-      //   console.log('less than or equal to 2 tickets');
-
-      //   this.ajax('deleteIt', filteredTickets) // Send last batch to 'deleteIt'
-      //     .done( function() {
-      //         this.switchTo('nuke');
-      //         services.notify('Suspended tickets deleted successfully');
-      //     })
-      //     .fail( function() { 
-      //         console.log('Failed to delete suspended tickets ' + filteredTickets);
-      //     });
-      
-      // }
 
     }
 
