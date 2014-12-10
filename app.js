@@ -183,18 +183,37 @@
         console.log('Results:');
         console.log(resultsSet);
 
-        console.log('(start for loop through results)');
-        for (var e = 0; resultsSet.length > e; e++) {
-          var closedId = resultsSet[e][0];
-          console.log('Closed Ticket: ' + closedId);
-          for (var q = 0; resultsSet[e][1].length > q; q++) {
-            var followUpId = resultsSet[e][1][q];
-            console.log('Follow Up to Closed ID: ' + closedId + ' is follow up ID: ' + followUpId);
-          }
-        }
-        console.log('(end for loop through results)');
+        var resultsSetObject = resultsSet.map(function(element){
+          return {closedTicketID: element[0], followupIDs: element[1]};
+        });
 
-        this.switchTo('done2');
+        console.log('resultsSetObject:');
+        console.log(resultsSetObject);
+
+        // console.log('(start for loop through results)');
+        // for (var e = 0; resultsSet.length > e; e++) { 
+        // // closedId created for each closed ticket ID
+        //   var closedId = resultsSet[e][0];
+        //   console.log('Closed Ticket: ' + closedId);
+        //   for (var q = 0; resultsSet[e][1].length > q; q++) { 
+        //   // followUpId created for each follow up associated with the parent for loops closedId parent array value
+        //     var followUpId = resultsSet[e][1][q];
+        //     console.log('Follow Up to Closed ID: ' + closedId + ' is follow up ID: ' + followUpId);
+        //   }
+        // }
+
+        // // element 0 is the closed ticket id
+        // // element 1 is that closed tickets follow up ids
+
+        // console.log('(end for loop through results)');
+
+        console.log('requestCount');
+        console.log(requestCount);
+
+        this.switchTo('done2', {
+          results : resultsSetObject,
+          filteredTickets: resultsSet.length
+        });
       }
       console.log('--- End ---');
     },
