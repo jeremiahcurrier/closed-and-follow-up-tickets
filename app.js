@@ -208,18 +208,17 @@
         console.log(next_page);
       }
       
+      console.log('completedAuditRequests');
       console.log(completedAuditRequests);
+      console.log('this.totalRequests');
       console.log(this.totalRequests);
-
-      console.log('^^^^^^^   closedTicketWithFollowup   ^^^^^^^^ ');
+      console.log('closedTicketWithFollowup');
       console.log(closedTicketWithFollowup);
 
-      this.switchTo('loading2');
-
-        if (completedAuditRequests === this.totalRequests) {
-          this.switchTo('done2');
-          console.log('All AJAX requests to the ~/audits/{id}.json COMPLETE');
-        }
+      if (completedAuditRequests === this.totalRequests) {
+        this.switchTo('done2');
+        console.log('All AJAX requests to the ~/audits/{id}.json COMPLETE');
+      }
 
       console.log('@@@@@@@@@@@@@@@@@@@@@ single ajax request to audits done @@@@@@@@@@@@@@@@@@@@@');
 
