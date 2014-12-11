@@ -1,2 +1,2 @@
-<h3>Fetching closed tickets</h3>
+<h2>Fetching closed tickets</h2>
 {{spinner "dotted"}}
