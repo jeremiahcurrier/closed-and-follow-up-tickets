@@ -36,8 +36,17 @@
       
       // DOM Events
       'click .search': 'fetch', // Get closed tickets
+      'click .refresh': 'fetch', // Get closed tickets
       'click .go_back': function(){ // Go back to first page
-        this.switchTo('main');
+        
+        console.log('*** *** clicked .go_back *** ***');
+
+        resultsSet = []; // This line prevents duplicating the results set
+
+        this.switchTo('done', {
+          filteredTickets : this.totalRequestsCount
+        });
+
       },
       'click .get_follow_ups': function(){
         this.getFollowUps(this.filteredTickets); // Pass all closed ticket IDs to getFollowUps
@@ -47,8 +56,6 @@
 
     init: function () {
       this.switchTo('main');
-      console.log('requestCount:');
-      console.log(requestCount);
     },
 
     fetch: function() {
@@ -187,33 +194,27 @@
           return {closedTicketID: element[0], followupIDs: element[1]};
         });
 
+        // Anchors
+
+        this.resultsSetObject = resultsSetObject;
+        this.resultsSet = resultsSet;
+
         console.log('resultsSetObject:');
         console.log(resultsSetObject);
-
-        // console.log('(start for loop through results)');
-        // for (var e = 0; resultsSet.length > e; e++) { 
-        // // closedId created for each closed ticket ID
-        //   var closedId = resultsSet[e][0];
-        //   console.log('Closed Ticket: ' + closedId);
-        //   for (var q = 0; resultsSet[e][1].length > q; q++) { 
-        //   // followUpId created for each follow up associated with the parent for loops closedId parent array value
-        //     var followUpId = resultsSet[e][1][q];
-        //     console.log('Follow Up to Closed ID: ' + closedId + ' is follow up ID: ' + followUpId);
-        //   }
-        // }
-
-        // // element 0 is the closed ticket id
-        // // element 1 is that closed tickets follow up ids
-
-        // console.log('(end for loop through results)');
-
         console.log('requestCount');
         console.log(requestCount);
+        console.log('this.resultsSetObject:');
+        console.log(this.resultsSetObject);
+        console.log('this.requestCount');
+        console.log(this.requestCount);
+
+        // Switch to template w/list of tickets & CSV download button
 
         this.switchTo('done2', {
           results : resultsSetObject,
           filteredTickets: resultsSet.length
         });
+
       }
       console.log('--- End ---');
     },
@@ -224,6 +225,8 @@
     },
 
     getFollowUps: function() { // Get audits for each closed ticket ID - 1 AJAX request @ a time
+
+      requestCount= 0;
 
       var filteredTickets     = this.filteredTickets,
           totalRequestsCount  = filteredTickets.length;

@@ -1,6 +1,8 @@
-<h3 style="margin-bottom: 10px;">There are <strong>{{filteredTickets}}</strong> Closed Tickets with follow ups</h3>
+<h2 style="margin-bottom: 10px; color: #555">Closed tickets with follow ups: <span style="color: black;">{{filteredTickets}}</span></h2>
 
-&nbsp; <a href="data:text/csv;charset=utf-8,ClosedTicketID%2CFollowUpTicketIDs%0A{{#each results}}{{closedTicketID}}%2C{{followupIDs}}%0A{{/each}}" download="closedTicketsFollowupTickets.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
+<button class="btn go_back" type="button">Back</button>
+
+&nbsp;<a href="data:text/csv;charset=utf-8,ClosedTicketID%2CFollowUpTicketIDs%0A{{#each results}}{{closedTicketID}}%2C{{followupIDs}}%0A{{/each}}" download="closedTicketsFollowupTickets.csv" class="btn"><i class="icon-download-alt"></i> Download CSV</a>
 <br>
 <br>
 <div class="alert hidden">There is an outstanding bug with Chrome causing the file to download without a .csv extension. Just rename it to something.csv and open as normal.</div>
