@@ -1,6 +1,8 @@
-follow-up-ticket-list
+Closed and Follow Up Tickets
 =====================
 
-Displays lists of closed tickets &amp; their follow up ticket ids. This can be exported as a CSV
+This app builds a table showing your closed ticket IDs in the first column with their respective follow up tickets in the second column.
 
-![](http://g.recordit.co/5rTpwHKpQl.gif)
+The list that's shown can be downloaded as a CSV.
+
+![](http://g.recordit.co/ccsWUczuFP.gif)
